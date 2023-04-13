@@ -22,13 +22,15 @@ namespace Catalog.API.Repositories
         {
             return await _context.Products.Find(p => p.Id == id).FirstOrDefaultAsync();
         }
+
         public async Task<IEnumerable<Product>> GetProductByName(string name)
         {
             FilterDefinition<Product> filter = 
-                Builders<Product>.Filter.ElemMatch(p => p.Name, name);
+                Builders<Product>.Filter.Where(p => p.Name.ToLower().Contains(name.ToLower()));
 
             return await _context.Products.Find(filter).ToListAsync();
         }
+
         public async Task<IEnumerable<Product>> GetProductByCategory(string categoryName)
         {
             FilterDefinition<Product> filter =
@@ -36,7 +38,6 @@ namespace Catalog.API.Repositories
 
             return await _context.Products.Find(filter).ToListAsync();
         }
-
 
         public async Task CreateProduct(Product product)
         {
